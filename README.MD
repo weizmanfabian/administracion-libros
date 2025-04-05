@@ -11,7 +11,7 @@ Sistema de Gestión de libros y autores.
 ## Estructura del Proyecto
 
 ```
-Universidad/
+administracion-libros/
 ├── Biblioteca/
 │   ├── src/
 │   │   ├── main/
@@ -20,7 +20,7 @@ Universidad/
 │   │   └── test/
 │   ├── dockerdocker-compose.yml
 │   └── pom.xml
-├── universidad-front/
+├── front/
 │   ├── src/
 │   ├── public/
 │   └── package.json
