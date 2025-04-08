@@ -1,28 +1,46 @@
-
 services:
+  app:
+    container_name: backend
+    build: .
+    ports:
+      - "${APP_PORT_OUT}:${APP_PORT_IN}"
+    environment:
+      - APP_NAME=${APP_NAME}
+      - APP_CONTEXT_PATH=${APP_CONTEXT_PATH}
+      - APP_PORT=${APP_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PORT_IN=${DB_PORT_IN}
+      - DB_HOST=db
+    depends_on:
+      - db
+    networks:
+      - biblioteca-network
   db:
     image: postgres:latest
-    container_name: biblioteca
+    container_name: base_de_datos
     restart: always
     volumes:
-      # Scripts de inicialización en orden de ejecución
       - ./db/sql/create_schema.sql:/docker-entrypoint-initdb.d/1.create_schema.sql
       - ./db/sql/data.sql:/docker-entrypoint-initdb.d/2.data.sql
-
       - ./db/sql/functions/fn_get_autores.sql:/docker-entrypoint-initdb.d/3.fn_get_autores.sql
       - ./db/sql/storeProcedure/uspAutorInsert.sql:/docker-entrypoint-initdb.d/4.uspAutorInsert.sql
       - ./db/sql/storeProcedure/uspAutorUpdate.sql:/docker-entrypoint-initdb.d/5.uspAutorUpdate.sql
       - ./db/sql/storeProcedure/uspAutorDelete.sql:/docker-entrypoint-initdb.d/6.uspAutorDelete.sql
-
       - ./db/sql/functions/fn_get_libros.sql:/docker-entrypoint-initdb.d/7.fn_get_libros.sql
       - ./db/sql/storeProcedure/uspLibroInsert.sql:/docker-entrypoint-initdb.d/8.uspLibroInsert.sql
       - ./db/sql/storeProcedure/uspLibroUpdate.sql:/docker-entrypoint-initdb.d/9.uspLibroUpdate.sql
       - ./db/sql/storeProcedure/uspLibroDelete.sql:/docker-entrypoint-initdb.d/10.uspLibroDelete.sql
-
-      #- ./db/sql/function/fn_consultar_el_estado_actual_del_inventario.sql:/docker-entrypoint-initdb.d/4.fn_consultar_el_estado_actual_del_inventario.sql
     environment:
-      - POSTGRES_DB=biblioteca
-      - POSTGRES_USER=weizman
-      - POSTGRES_PASSWORD=YourStrong#Passw0rd
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
-      - "5438:5432"
+      - "${DB_PORT_OUT}:${DB_PORT_IN}"
+    networks:
+      - biblioteca-network
+
+networks:
+  biblioteca-network:
+    driver: bridge
