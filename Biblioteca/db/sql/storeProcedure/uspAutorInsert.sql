@@ -2,7 +2,8 @@
 CREATE OR REPLACE PROCEDURE uspAutorInsert(
   IN p_nombre VARCHAR(255),
   IN p_apellido VARCHAR(255),
-  IN p_nacionalidad VARCHAR(100) DEFAULT NULL
+  IN p_nacionalidad VARCHAR(100),
+  OUT new_id INTEGER
 )
 LANGUAGE plpgsql
 AS $$
@@ -18,7 +19,8 @@ BEGIN
 
   -- Insertamos el registro
   INSERT INTO autor (nombre, apellido, nacionalidad)
-  VALUES (p_nombre, p_apellido, p_nacionalidad);
+  VALUES (p_nombre, p_apellido, p_nacionalidad)
+  RETURNING autor_id INTO new_id;
 
 EXCEPTION
   WHEN OTHERS THEN

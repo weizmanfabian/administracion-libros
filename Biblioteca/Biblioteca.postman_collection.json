@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "get",
+			"name": "getAutores",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -24,7 +24,21 @@
 			"response": []
 		},
 		{
-			"name": "post",
+			"name": "postAutor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();\r",
+							"pm.collectionVariables.set(\"id_autor\", response.id);\r",
+							"console.log(pm.collectionVariables.get(\"id_autor\"));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -50,25 +64,25 @@
 			"response": []
 		},
 		{
-			"name": "getById",
+			"name": "getAutorById",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/autores/4",
+					"raw": "{{url}}/autores/{{id_autor}}",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"autores",
-						"4"
+						"{{id_autor}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "put",
+			"name": "putAutor",
 			"request": {
 				"method": "PUT",
 				"header": [],
@@ -82,31 +96,31 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/autores/4",
+					"raw": "{{url}}/autores/{{id_autor}}",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"autores",
-						"4"
+						"{{id_autor}}"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "deleteById",
+			"name": "deleteAutorById",
 			"request": {
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/autores/4",
+					"raw": "{{url}}/autores/{{id_autor}}",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"autores",
-						"4"
+						"{{id_autor}}"
 					]
 				}
 			},
@@ -131,12 +145,26 @@
 		},
 		{
 			"name": "postLibro",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();\r",
+							"pm.collectionVariables.set(\"id_libro\", response.id);\r",
+							"console.log(pm.collectionVariables.get(\"id_libro\"));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"titulo\": \"El cabellero de la armadura Oxidada\",\r\n    \"anioPublicacion\": 2005,\r\n    \"idAutor\": 2\r\n}\r\n",
+					"raw": "{\r\n    \"titulo\": \"El cabellero de la armadura Oxidada\",\r\n    \"anioPublicacion\": 2005,\r\n    \"idAutor\": 1\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -161,13 +189,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/libros/5",
+					"raw": "{{url}}/libros/{{id_libro}}",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"libros",
-						"5"
+						"{{id_libro}}"
 					]
 				}
 			},
@@ -180,7 +208,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"titulo\": \"El cabellero de la armadura Oxidada NEW\",\r\n    \"anioPublicacion\": 2005,\r\n    \"idAutor\": 1\r\n}\r\n",
+					"raw": "{\r\n    \"titulo\": \"El cabellero de la armadura Oxidada NEW\",\r\n    \"anioPublicacion\": 2005,\r\n    \"idAutor\": 5\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -188,13 +216,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/libros/5",
+					"raw": "{{url}}/libros/{{id_libro}}",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"libros",
-						"5"
+						"{{id_libro}}"
 					]
 				}
 			},
@@ -206,13 +234,13 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/libros/5",
+					"raw": "{{url}}/libros/{{id_libro}}",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
 						"libros",
-						"5"
+						"{{id_libro}}"
 					]
 				}
 			},
@@ -246,6 +274,14 @@
 			"key": "url",
 			"value": "http://localhost:8088/biblioteca",
 			"type": "string"
+		},
+		{
+			"key": "id_libro",
+			"value": ""
+		},
+		{
+			"key": "id_autor",
+			"value": ""
 		}
 	]
 }
