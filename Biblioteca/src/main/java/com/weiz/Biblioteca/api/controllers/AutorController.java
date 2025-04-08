@@ -32,13 +32,13 @@ public class AutorController {
 
 
     @PostMapping
-    public ResponseEntity<String> post(@Valid @RequestBody AutorRequest request) {
+    public ResponseEntity<AutorResponse> post(@Valid @RequestBody AutorRequest request) {
         var response = autorService.create(request);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping(path = "{id}")
-    public ResponseEntity<String> put(@Valid @RequestBody AutorRequest request, @PathVariable Integer id) throws InvocationTargetException, IllegalAccessException {
+    public ResponseEntity<AutorResponse> put(@Valid @RequestBody AutorRequest request, @PathVariable Integer id) throws InvocationTargetException, IllegalAccessException {
         var response = autorService.update(request, id);
         return ResponseEntity.ok(response);
     }

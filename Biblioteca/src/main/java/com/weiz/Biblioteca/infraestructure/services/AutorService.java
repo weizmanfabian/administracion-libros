@@ -50,7 +50,7 @@ public class AutorService implements IAutorService {
     }
 
     @Override
-    public String create(AutorRequest request) {
+    public AutorResponse create(AutorRequest request) {
         try {
             // Definir los parámetros del procedimiento almacenado
             SqlParameterValue nombreParam = new SqlParameterValue(Types.VARCHAR, request.getNombre());
@@ -61,7 +61,7 @@ public class AutorService implements IAutorService {
             jdbcTemplate.update("CALL uspAutorInsert(?, ?, ?)",
                     nombreParam, apellidoParam, nacionalidadParam);
 
-            return "Autor creado correctamente";
+            return new AutorResponse();
 
         } catch (DataAccessException e) {
             log.error("Error al ejecutar SP uspAutorInsert", e);
@@ -85,7 +85,7 @@ public class AutorService implements IAutorService {
     }
 
     @Override
-    public String update(AutorRequest request, Integer id) throws InvocationTargetException, IllegalAccessException {
+    public AutorResponse update(AutorRequest request, Integer id) throws InvocationTargetException, IllegalAccessException {
         try {
             // Definir los parámetros del procedimiento almacenado
             SqlParameterValue autorIdParam = new SqlParameterValue(Types.INTEGER, id);
@@ -97,7 +97,7 @@ public class AutorService implements IAutorService {
             jdbcTemplate.update("CALL uspAutorUpdate(?, ?, ?, ?)",
                     autorIdParam, nombreParam, apellidoParam, nacionalidadParam);
 
-            return "Autor actualizado correctamente";
+            return new AutorResponse();
 
         } catch (DataAccessException e) {
             log.error("Error al ejecutar SP uspAutorUpdate", e);
