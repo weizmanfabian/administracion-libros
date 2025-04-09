@@ -3,11 +3,12 @@ services:
     container_name: backend
     build: .
     ports:
-      - "${APP_PORT_OUT}:${APP_PORT_IN}"
+      - "${APP_PORT}:${APP_PORT}"
     environment:
       - APP_NAME=${APP_NAME}
       - APP_CONTEXT_PATH=${APP_CONTEXT_PATH}
-      - APP_PORT=${APP_PORT}
+      - APP_PORT_IN=${APP_PORT_IN}
+      - APP_PORT_OUT=${APP_PORT_OUT}
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
