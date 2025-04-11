@@ -3,7 +3,7 @@ services:
     container_name: backend
     build: .
     ports:
-      - "${APP_PORT}:${APP_PORT}"
+      - "${APP_PORT_OUT}:${APP_PORT_IN}"
     environment:
       - APP_NAME=${APP_NAME}
       - APP_CONTEXT_PATH=${APP_CONTEXT_PATH}

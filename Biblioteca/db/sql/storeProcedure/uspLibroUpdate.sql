@@ -11,17 +11,17 @@ BEGIN
 
     -- Validamos si existe el libro
     IF NOT EXISTS (SELECT 1 FROM libros WHERE libro_id = l_libro_id) THEN
-        RAISE EXCEPTION 'El libro no existe.';
+        RAISE EXCEPTION 'Libro no encontrado.';
     END IF;
 
     -- Validamos si el autor existe
     IF l_autor_id IS NOT NULL AND NOT EXISTS (SELECT 1 FROM autor WHERE autor_id = l_autor_id) THEN
-        RAISE EXCEPTION 'El autor no existe.';
+        RAISE EXCEPTION 'Autor no encontrado.';
     END IF;
 
     -- Validamos parámetros obligatorios
     IF l_titulo IS NULL OR TRIM(l_titulo) = '' THEN
-        RAISE EXCEPTION 'El parámetro título no puede ser nulo o vacío';
+        RAISE EXCEPTION 'El título es requerido';
     END IF;
 
     -- Actualizamos el libro
@@ -38,6 +38,6 @@ BEGIN
 
 EXCEPTION
     WHEN OTHERS THEN
-        RAISE EXCEPTION 'An error occurred: %', SQLERRM;
+        RAISE EXCEPTION '%', SQLERRM;
 END;
 $$;

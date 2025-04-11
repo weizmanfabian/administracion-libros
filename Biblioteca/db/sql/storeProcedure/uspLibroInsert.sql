@@ -8,11 +8,11 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     IF l_titulo IS NULL OR TRIM(l_titulo) = '' THEN
-        RAISE EXCEPTION 'El título es requerido';
+        RAISE EXCEPTION 'El título es requerido';
     END IF;
 
     IF l_anio_publicacion IS NULL THEN
-        RAISE EXCEPTION 'El año de publicación es requerido';
+        RAISE EXCEPTION 'El año de publicación es requerido';
     END IF;
 
     IF l_autor_id IS NULL OR l_autor_id = 0 THEN
@@ -21,7 +21,7 @@ BEGIN
 
     -- Verificar si el autor existe
     IF NOT EXISTS (SELECT 1 FROM autor WHERE autor_id = l_autor_id) THEN
-        RAISE EXCEPTION 'El autor con ID % no existe', l_autor_id;
+        RAISE EXCEPTION 'Autor no encontrado';
     END IF;
 
     INSERT INTO libros (titulo, anio_publicacion, autor_id)
@@ -30,6 +30,6 @@ BEGIN
 
 EXCEPTION
     WHEN OTHERS THEN
-        RAISE EXCEPTION 'Un error ha ocurrido en el SP: %', SQLERRM;
+        RAISE EXCEPTION '%', SQLERRM;
 END;
 $$;

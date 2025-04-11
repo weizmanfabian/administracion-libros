@@ -9,17 +9,17 @@ AS $$
 BEGIN
   --Validamos si existe el id
   IF NOT EXISTS (SELECT 1 FROM autor WHERE autor_id = p_autor_id) THEN
-    RAISE EXCEPTION 'El autor con id % no existe', p_autor_id;
+    RAISE EXCEPTION 'Autor no encontrado';
   END IF;
 
   -- Validamos parámetros obligatorios
-  IF p_nombre IS NULL OR TRIM(p_nombre) = '' THEN
-    RAISE EXCEPTION 'El parámetro nombre no puede ser nulo o vacío';
-  END IF;
+    IF p_nombre IS NULL OR TRIM(p_nombre) = '' THEN
+      RAISE EXCEPTION 'El nombre es requerido';
+    END IF;
 
-  IF p_apellido IS NULL OR TRIM(p_apellido) = '' THEN
-    RAISE EXCEPTION 'El parámetro apellido no puede ser nulo o vacío';
-  END IF;
+    IF p_apellido IS NULL OR TRIM(p_apellido) = '' THEN
+      RAISE EXCEPTION 'El apellido es requerido';
+    END IF;
 
   -- Actualizamos el registro
   UPDATE autor SET

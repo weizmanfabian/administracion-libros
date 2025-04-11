@@ -10,11 +10,11 @@ AS $$
 BEGIN
   -- Validamos parámetros obligatorios
   IF p_nombre IS NULL OR TRIM(p_nombre) = '' THEN
-    RAISE EXCEPTION 'El parámetro nombre no puede ser nulo o vacío';
+    RAISE EXCEPTION 'El nombre es requerido';
   END IF;
 
   IF p_apellido IS NULL OR TRIM(p_apellido) = '' THEN
-    RAISE EXCEPTION 'El parámetro apellido no puede ser nulo o vacío';
+    RAISE EXCEPTION 'El apellido es requerido';
   END IF;
 
   -- Insertamos el registro
