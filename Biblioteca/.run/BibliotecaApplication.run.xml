@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="BibliotecaApplication" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="com.weiz.Biblioteca.BibliotecaApplication" />
+    <module name="Biblioteca" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.weiz.Biblioteca.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
