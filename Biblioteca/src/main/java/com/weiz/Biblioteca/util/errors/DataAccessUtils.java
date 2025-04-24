@@ -1,6 +1,5 @@
 package com.weiz.Biblioteca.util.errors;
 
-import com.weiz.Biblioteca.infraestructure.DataAccessOperation;
 import com.weiz.Biblioteca.util.ErrorMessageExtractor;
 import com.weiz.Biblioteca.util.Exceptions.CustomException;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.weiz.Biblioteca.infraestructure;
+package com.weiz.Biblioteca.util.errors;
 
 
 @FunctionalInterface
