@@ -4,7 +4,6 @@ import com.weiz.Biblioteca.api.requests.LibroRequest;
 import com.weiz.Biblioteca.api.responses.LibroResponse;
 import com.weiz.Biblioteca.domain.entities.AutorEntity;
 import com.weiz.Biblioteca.domain.entities.LibroEntity;
-import com.weiz.Biblioteca.domain.repositories.AutorRepository;
 import com.weiz.Biblioteca.domain.repositories.LibroRepository;
 import com.weiz.Biblioteca.infraestructure.services.imp.ILIbroService;
 import com.weiz.Biblioteca.util.Exceptions.CustomException;
@@ -26,7 +25,7 @@ import java.util.Set;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class LibroService implements ILIbroService {
+public class LibroService1 implements ILIbroService {
 
     private static final String ERROR_CREATING_LIBRO_MESSAGE = "Error al crear libro";
     private static final String ERROR_UPDATING_LIBRO_MESSAGE = "Error al actualizar libro";
@@ -100,7 +99,7 @@ public class LibroService implements ILIbroService {
             }
             // Retrieve and return the book entity using the ID
             return libroRepository.findById(id)
-                    .map(LibroService::entityToResponse)
+                    .map(LibroService1::entityToResponse)
                     .orElseThrow(() -> new IdNotFoundException("Libro"));
         } catch (DataAccessException e) {
             // Log the error and throw a custom exception with the extracted message
@@ -152,7 +151,7 @@ public class LibroService implements ILIbroService {
     @Override
     public LibroResponse readById(Integer id) {
         return libroRepository.findById(id)
-                .map(LibroService::entityToResponse)
+                .map(LibroService1::entityToResponse)
                 .orElseThrow(() -> new IdNotFoundException("Libro"));
     }
 

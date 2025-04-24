@@ -4,9 +4,11 @@ import com.weiz.Biblioteca.api.requests.AutorRequest;
 import com.weiz.Biblioteca.api.requests.LibroRequest;
 import com.weiz.Biblioteca.api.responses.AutorResponse;
 import com.weiz.Biblioteca.api.responses.LibroResponse;
+import com.weiz.Biblioteca.aplication.port.in.LibroUseCase;
 import com.weiz.Biblioteca.infraestructure.services.imp.ILIbroService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,35 +19,37 @@ import java.util.Set;
 @RequestMapping(path = "libros")
 @AllArgsConstructor
 public class LibroController {
-    private final ILIbroService libroService;
+    private final LibroUseCase libroUseCase;
 
     @GetMapping
     public ResponseEntity<Set<LibroResponse>> get() {
-        var response = libroService.readAll();
+        var response = libroUseCase.readAll();
         return response.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(response);
     }
 
     @GetMapping(path = "{id}")
     public ResponseEntity<LibroResponse> get(@PathVariable Integer id) {
-        var response = libroService.readById(id);
+        var response = libroUseCase.readById(id);
         return response == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(response);
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<LibroResponse> post(@Valid @RequestBody LibroRequest request) {
-        var response = libroService.create(request);
+        var response = libroUseCase.create(request);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping(path = "{id}")
     public ResponseEntity<LibroResponse> put(@Valid @RequestBody LibroRequest request, @PathVariable Integer id) throws InvocationTargetException, IllegalAccessException {
-        var response = libroService.update(request, id);
+        var response = libroUseCase.update(request, id);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping(path = "{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<String> delete(@PathVariable Integer id) {
-        libroService.delete(id);
+        libroUseCase.delete(id);
         return ResponseEntity.ok("Libro eliminado correctamente");
     }
 }
