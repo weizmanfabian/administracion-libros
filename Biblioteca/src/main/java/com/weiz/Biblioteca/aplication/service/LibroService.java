@@ -46,8 +46,7 @@ public class LibroService implements LibroUseCase {
     @Transactional
     public LibroResponse update(LibroRequest request, Integer id) {
         LibroEntity libroEntity = LibroService.requestToEntity(request);
-        libroEntity.setId(id);
-        return LibroService.entityToResponse(libroPort.update(libroEntity));
+        return LibroService.entityToResponse(libroPort.update(libroEntity, id));
     }
 
     @Override
@@ -61,12 +60,7 @@ public class LibroService implements LibroUseCase {
                 .id(libroEntity.getId())
                 .titulo(libroEntity.getTitulo())
                 .anioPublicacion(libroEntity.getAnioPublicacion())
-                .autor(AutorResponse.builder()
-                        .id(libroEntity.getAutorEntity().getId())
-                        .nombre(libroEntity.getAutorEntity().getNombre())
-                        .apellido(libroEntity.getAutorEntity().getApellido())
-                        .nacionalidad(libroEntity.getAutorEntity().getNacionalidad())
-                        .build())
+                .autor(AutorService.entityToResponse(libroEntity.getAutorEntity()))
                 .build();
     }
 

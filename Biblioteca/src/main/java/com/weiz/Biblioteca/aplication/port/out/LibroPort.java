@@ -11,8 +11,12 @@ import java.util.Set;
  */
 public interface LibroPort {
     LibroEntity save(LibroEntity libro);
+
     Optional<LibroEntity> findById(Integer id);
+
     Set<LibroEntity> findAll();
-    LibroEntity update(LibroEntity libro);
+
+    LibroEntity update(LibroEntity libro, Integer id);
+
     void delete(Integer id);
 }

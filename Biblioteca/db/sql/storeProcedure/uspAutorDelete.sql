@@ -7,7 +7,7 @@ AS $$
 BEGIN
   --Validamos si existe el id
   IF NOT EXISTS (SELECT 1 FROM autor WHERE autor_id = p_autor_id) THEN
-    RAISE EXCEPTION 'El autor con id % no existe', p_autor_id;
+    RAISE EXCEPTION 'Autor no encontrado';
   END IF;
 
     -- eliminamos el registro

@@ -1,11 +1,8 @@
 package com.weiz.Biblioteca.api.controllers;
 
-import com.weiz.Biblioteca.api.requests.AutorRequest;
 import com.weiz.Biblioteca.api.requests.LibroRequest;
-import com.weiz.Biblioteca.api.responses.AutorResponse;
 import com.weiz.Biblioteca.api.responses.LibroResponse;
 import com.weiz.Biblioteca.aplication.port.in.LibroUseCase;
-import com.weiz.Biblioteca.infraestructure.services.imp.ILIbroService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

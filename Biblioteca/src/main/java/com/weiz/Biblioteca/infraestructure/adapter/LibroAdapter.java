@@ -24,7 +24,10 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Slf4j
 public class LibroAdapter implements LibroPort {
-
+    private static final String NAME_PROCEDURE_READ_ALL = "fn_get_libros()";
+    private static final String NAME_PROCEDURE_CREATE = "uspLibroInsert";
+    private static final String NAME_PROCEDURE_UPDATE = "uspLibroUpdate";
+    private static final String NAME_PROCEDURE_DELETE = "uspLibroDelete";
     private static final String ERROR_CREATING_LIBRO_MESSAGE = "Error al crear libro";
     private static final String ERROR_UPDATING_LIBRO_MESSAGE = "Error al actualizar libro";
     private static final String ERROR_DELETING_LIBRO_MESSAGE = "Error al eliminar libro";
@@ -41,7 +44,7 @@ public class LibroAdapter implements LibroPort {
         return switch (message) {
             case String s when s.contains("título") -> "El título es requerido";
             case String s when s.contains("año") -> "El año de publicación es requerido";
-            case String s when s.contains("autor no encontrado") -> "Autor no encontrado";
+            case String s when s.contains("Autor no encontrado") -> "Autor no encontrado";
             case String s when s.contains("El autor es requerido") -> "El autor es requerido";
             case String s when s.contains("libro") -> "Libro no encontrado";
             default -> message;
@@ -61,18 +64,19 @@ public class LibroAdapter implements LibroPort {
                     .addValue("l_autor_id", libro.getAutorEntity().getId())
                     .addValue("new_id", null, Types.INTEGER);
 
-            String sql = "CALL uspLibroInsert(:l_titulo, :l_anio_publicacion, :l_autor_id, :new_id)";
-            log.info("Ejecutando uspLibroInsert con parámetros {}", parameters.getValues());
+            String sql = "CALL %s(:l_titulo, :l_anio_publicacion, :l_autor_id, :new_id)".formatted(NAME_PROCEDURE_CREATE);
+            printExecutingProcedure("uspLibroInsert", parameters.getValues());
 
-            Map<String, Object> result = namedParameterJdbcTemplate.queryForMap(sql, parameters);
-            Integer newId = (Integer) result.get("new_id");
+            //Map<String, Object> result = namedParameterJdbcTemplate.queryForMap(sql, parameters);
+            //Integer newId = (Integer) result.get("new_id");
+            Integer newId = (Integer) namedParameterJdbcTemplate.queryForMap(sql, parameters).get("new_id");
 
             if (newId == null) {
-                throw new RuntimeException(ERROR_CREATING_LIBRO_MESSAGE);
+                throw new CustomException(ERROR_CREATING_LIBRO_MESSAGE);
             }
             return findById(newId).orElseThrow(() -> new IdNotFoundException("Libro"));
         } catch (DataAccessException e) {
-            log.error("Error al ejecutar SP uspLibroInsert", e);
+            log.error("Error al ejecutar SP %s".formatted(NAME_PROCEDURE_CREATE), e);
             String errMsg = extractErrorMessage(e, ERROR_CREATING_LIBRO_MESSAGE);
             log.error("errMsg {}", errMsg);
             throw new CustomException(errMsg);
@@ -89,7 +93,7 @@ public class LibroAdapter implements LibroPort {
     @Override
     public Set<LibroEntity> findAll() {
         try {
-            return new HashSet<>(jdbcTemplate.query("SELECT l.libro_id, l.titulo, l.anio_publicacion, a.autor_id, a.nombre AS autor_nombre, a.apellido AS autor_apellido, a.nacionalidad AS autor_nacionalidad FROM fn_get_libros() l JOIN autor a ON l.autor_id = a.autor_id",
+            return new HashSet<>(jdbcTemplate.query("SELECT l.libro_id, l.titulo, l.anio_publicacion, a.autor_id, a.nombre AS autor_nombre, a.apellido AS autor_apellido, a.nacionalidad AS autor_nacionalidad FROM %s l JOIN autor a ON l.autor_id = a.autor_id".formatted(NAME_PROCEDURE_READ_ALL),
                     (rs, rowNum) -> LibroEntity.builder()
                             .id(rs.getInt("libro_id"))
                             .titulo(rs.getString("titulo"))
@@ -103,28 +107,28 @@ public class LibroAdapter implements LibroPort {
                             .build()
             ));
         } catch (DataAccessException e) {
-            log.error("Error al obtener libros from fn_get_libros", e);
+            log.error("Error al obtener libros from %s".formatted(NAME_PROCEDURE_READ_ALL), e);
             throw new CustomException(ERROR_FETCHING_LIBROS_MESSAGE, e);
         }
     }
 
     @Override
-    public LibroEntity update(LibroEntity libro) {
+    public LibroEntity update(LibroEntity libro, Integer id) {
         try {
             MapSqlParameterSource parameters = new MapSqlParameterSource()
-                    .addValue("l_libro_id", libro.getId())
+                    .addValue("l_libro_id", id)
                     .addValue("l_titulo", libro.getTitulo())
                     .addValue("l_anio_publicacion", libro.getAnioPublicacion())
                     .addValue("l_autor_id", libro.getAutorEntity().getId());
 
-            String sql = "CALL uspLibroUpdate(:l_libro_id, :l_titulo, :l_anio_publicacion, :l_autor_id)";
-            log.info("Ejecutando uspLibroUpdate con parámetros {}", parameters.getValues());
+            String sql = "CALL %s(:l_libro_id, :l_titulo, :l_anio_publicacion, :l_autor_id)".formatted(NAME_PROCEDURE_UPDATE);
+            printExecutingProcedure(NAME_PROCEDURE_UPDATE, parameters.getValues());
 
             namedParameterJdbcTemplate.update(sql, parameters);
-            return findById(libro.getId()).orElseThrow(() -> new IdNotFoundException("Libro"));
+            return findById(id).orElseThrow(() -> new IdNotFoundException("Libro"));
         } catch (DataAccessException e) {
-            log.error("Error al ejecutar SP uspLibroUpdate", e);
-            String errorMessage = extractErrorMessage(e, "Error al actualizar libro");
+            log.error("Error al ejecutar SP %s".formatted(NAME_PROCEDURE_UPDATE), e);
+            String errorMessage = extractErrorMessage(e, ERROR_UPDATING_LIBRO_MESSAGE);
             throw new CustomException(errorMessage);
         }
     }
@@ -132,9 +136,9 @@ public class LibroAdapter implements LibroPort {
     @Override
     public void delete(Integer id) {
         try {
-            jdbcTemplate.update("CALL uspLibroDelete(?)", id);
+            jdbcTemplate.update("CALL %s(?)".formatted(NAME_PROCEDURE_DELETE), id);
         } catch (DataAccessException e) {
-            log.error("Error al ejecutar SP uspLibroDelete", e);
+            log.error("Error al ejecutar SP %s".formatted(NAME_PROCEDURE_DELETE), e);
             throw new CustomException(extractErrorMessage(e, ERROR_DELETING_LIBRO_MESSAGE));
         }
     }
